@@ -5,12 +5,22 @@ import Header from './components/Header'
 import {db} from './data/db'
 
 function App() {
+
+    const initialCart = () => {
+        const localStorageCart = localStorage.getItem('cart');
+        return localStorageCart ? JSON.parse(localStorageCart) : [];
+    }
     
-    const [data,setData] = useState(db);
-    const [cart, setCart] = useState([]);
+    const [data] = useState(db);
+    const [cart, setCart] = useState(initialCart);
 
     const MAX_ITEMS = 10;
     const MIN_ITEMS = 1;
+
+    // useEfect cuando detecta un cambio en el carrito, lo guarda en el localStorage
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart])
 
     function addToCart(item){
         const itemExist = cart.findIndex((guitar)=> 
@@ -25,6 +35,7 @@ function App() {
                 item.quantity = 1;
                 setCart([...cart, item])
             }
+
 
     }
 
@@ -57,6 +68,7 @@ function App() {
     function clearCart(){
         setCart([]);
     }
+
 
   return (
     <>
